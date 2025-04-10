@@ -20,15 +20,15 @@
 #
 ##############################################################################
 from __future__ import unicode_literals
-import logging
+
 import copy
+import logging
 from itertools import chain
 
-from .page import get_doc_type
-from .page import build_html_enclosing_tag, build_xml_enclosing_tag
-from .page import XMl_DECLARATION
+from .page import (XMl_DECLARATION, build_html_enclosing_tag,
+                   build_xml_enclosing_tag, get_doc_type)
 
-_logger = logging.getLogger('pyhiccup.convert')
+_logger = logging.getLogger("pyhiccup.convert")
 
 TREE_TYPE = (list, tuple)
 
@@ -48,8 +48,8 @@ def format_attributes(attributes):
     """
     output = []
     for item in sorted(attributes.items()):
-        output.append('%s=\"%s\"' % item)
-    return " %s" % ' '.join(output)
+        output.append('%s="%s"' % item)
+    return " %s" % " ".join(output)
 
 
 def _convert_tree(node):
@@ -63,7 +63,7 @@ def _convert_tree(node):
     :return: a list of string
     :rtype: list
     """
-    #perfo tweak with side effect
+    # perfo tweak with side effect
     if isinstance(node[0], TREE_TYPE):
         for sub_node in node:
             for x in _convert_tree(sub_node):
@@ -71,9 +71,9 @@ def _convert_tree(node):
         return
     btype = node[0]
     rest = node[1:] if len(node) > 1 else []
-    attrs = ''
+    attrs = ""
     inner_trees = []
-    inner_element = ''
+    inner_element = ""
     for element in rest:
         if not element:
             continue
@@ -87,7 +87,7 @@ def _convert_tree(node):
         else:
             inner_element = element
     if inner_element or inner_trees:
-        yield '<%s%s>' % (
+        yield "<%s%s>" % (
             btype,
             attrs,
         )
@@ -96,9 +96,9 @@ def _convert_tree(node):
             for ext in inner_trees:
                 for x in _convert_tree(ext):
                     yield x
-        yield '</%s>' % btype
+        yield "</%s>" % btype
     else:
-        yield '<%s%s/>' % (
+        yield "<%s%s/>" % (
             btype,
             attrs,
         )
@@ -117,19 +117,13 @@ def _inclose_page(declaration, enclosing_tag, value):
     """
     to_convert = copy.deepcopy(enclosing_tag)
     to_convert.append(value)
-    converted = chain(
-        [declaration],
-        _convert_tree(to_convert)
-    )
+    converted = chain([declaration], _convert_tree(to_convert))
     if _logger.getEffectiveLevel() == logging.DEBUG:
-        _logger.debug(
-            list(chain([declaration],
-                       _convert_tree(to_convert)))
-        )
+        _logger.debug(list(chain([declaration], _convert_tree(to_convert))))
     return converted
 
 
-def html(value, etype='html5', **kwargs):
+def html(value, etype="html5", **kwargs):
     """Transform a list describing HTML to raw HTML
 
     :param value: list of list describing HTML
@@ -146,7 +140,7 @@ def html(value, etype='html5', **kwargs):
     declaration = get_doc_type(etype)
     enclosing_tag = build_html_enclosing_tag(etype)
     converted = _inclose_page(declaration, enclosing_tag, value)
-    return ''.join(converted)
+    return "".join(converted)
 
 
 def xml(value, etype, **kwargs):
@@ -165,7 +159,8 @@ def xml(value, etype, **kwargs):
     declaration = XMl_DECLARATION
     enclosing_tag = build_xml_enclosing_tag(etype, **kwargs)
     converted = _inclose_page(declaration, enclosing_tag, value)
-    return ''.join(converted)
+    return "".join(converted)
+
 
 def convert(value):
     """Transform a list to arbitratry XML
@@ -176,4 +171,4 @@ def convert(value):
     :return: XML string representation
     :rtype: str, unicode
     """
-    return ''.join(_convert_tree(value))
+    return "".join(_convert_tree(value))
