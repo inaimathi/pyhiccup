@@ -138,7 +138,7 @@ def html(value, etype="html5", **kwargs):
     :rtype: str, unicode
     """
     declaration = get_doc_type(etype)
-    enclosing_tag = build_html_enclosing_tag(etype)
+    enclosing_tag = build_html_enclosing_tag(etype, **kwargs)
     converted = _inclose_page(declaration, enclosing_tag, value)
     return "".join(converted)
 
