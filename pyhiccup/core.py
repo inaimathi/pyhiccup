@@ -72,30 +72,22 @@ def _convert_tree(node):
     btype = node[0]
     rest = node[1:] if len(node) > 1 else []
     attrs = ""
-    inner_trees = []
-    inner_element = ""
-    for element in rest:
-        if not element:
-            continue
-        if isinstance(element, TREE_TYPE):
-            if isinstance(element[0], TREE_TYPE):
-                inner_trees.extend(element)
-            else:
-                inner_trees.append(element)
-        elif isinstance(element, dict):
-            attrs = format_attributes(element)
-        else:
-            inner_element = element
-    if inner_element or inner_trees:
+    if rest and type(rest[0]) is dict:
+        attrs = format_attributes(rest[0])
+        rest = rest[1:]
+    if rest:
         yield "<%s%s>" % (
             btype,
             attrs,
         )
-        yield inner_element
-        if inner_trees:
-            for ext in inner_trees:
-                for x in _convert_tree(ext):
-                    yield x
+        for element in rest:
+            if not element:
+                continue
+            elif isinstance(element, TREE_TYPE):
+                for el in _convert_tree(element):
+                    yield el
+            else:
+                yield element
         yield "</%s>" % btype
     else:
         yield "<%s%s/>" % (
