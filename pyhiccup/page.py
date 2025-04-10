@@ -67,7 +67,7 @@ def build_html_enclosing_tag(etype, **kwargs):
     attrs = {}
     if etype in DOC_TYPES:
         attrs["lang"] = "en"
-        attrs["dir"] = "rtl"
+        attrs["dir"] = "ltr"
         attrs["xml:lang"] = "en"
     if "xhtml" in etype:
         attrs["xmlns"] = DEFAULT_XMLNS
