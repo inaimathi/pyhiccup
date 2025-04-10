@@ -22,19 +22,17 @@
 from __future__ import unicode_literals
 
 DOC_TYPES = {
-    'html4': "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" "
-             "\"http://www.w3.org/TR/html4/strict.dtd\">\n",
-
-    'xhtml-strict': "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 ""Strict//EN\" "
-                    "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n",
-
-    'xhtml-transitional': "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
-                          "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n",
-
-    'html5': "<!DOCTYPE html>\n",
+    "html4": '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" '
+    '"http://www.w3.org/TR/html4/strict.dtd">\n',
+    "xhtml-strict": '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 '
+    'Strict//EN" '
+    '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n',
+    "xhtml-transitional": '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" '
+    '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n',
+    "html5": "<!DOCTYPE html>\n",
 }
 
-DEFAULT_XMLNS = 'http://www.w3.org/1999/xhtml'
+DEFAULT_XMLNS = "http://www.w3.org/1999/xhtml"
 XMl_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>'
 
 
@@ -49,8 +47,7 @@ def get_doc_type(doc_type):
     """
     if doc_type not in DOC_TYPES:
         raise ValueError(
-            'Invalid DOCTYPE %s available values are %s' %
-            (doc_type, DOC_TYPES.keys())
+            "Invalid DOCTYPE %s available values are %s" % (doc_type, DOC_TYPES.keys())
         )
     return DOC_TYPES[doc_type]
 
@@ -69,13 +66,13 @@ def build_html_enclosing_tag(etype, **kwargs):
     """
     attrs = {}
     if etype in DOC_TYPES:
-        attrs['lang'] = 'en'
-        attrs['dir'] = 'rtl'
-        attrs['xml:lang'] = 'en'
-    if 'xhtml' in etype:
-        attrs[u'xmlns'] = DEFAULT_XMLNS
+        attrs["lang"] = "en"
+        attrs["dir"] = "rtl"
+        attrs["xml:lang"] = "en"
+    if "xhtml" in etype:
+        attrs["xmlns"] = DEFAULT_XMLNS
     attrs.update(kwargs)
-    return ['html', attrs]
+    return ["html", attrs]
 
 
 def build_xml_enclosing_tag(etype, **kwargs):
